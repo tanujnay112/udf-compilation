@@ -1,0 +1,35 @@
+DYNAMIC EXECUTION
+------------------------
+Lots of places of the form EXECUTE "SELECT X FROM Y WHERE key=" || <something>
+This something is usually a function of a parameter. Whole thing effectively can be compiled to an inlinable
+SQL query.
+
+CREATE FUNCTION fnc_pessoa3(pcpf character varying, pcampo character varying) RETURNS character varying
+    LANGUAGE plpgsql
+    AS $_$
+ declare 
+   result varchar;
+   sql    text;
+ begin
+   sql := 'select '|| pcampo || ' from pessoas where cpf = $1';
+   execute sql into result using pcpf;
+   return result; 
+   
+ end;
+
+https://github.com/aasouzaconsult/Scripts-para-DBA/blob/439200ecb7ba64187a8895f99ad10c20faa7d8eb/99.%20Postgres/Curso%20-%20MONDRIAN/aula.sql
+
+
+------------------------
+STATIC EXECUTION
+------------------------
+
+
+------------------------
+RAISES
+------------------------
+
+------------------------
+EXCEPTIONS
+------------------------
+

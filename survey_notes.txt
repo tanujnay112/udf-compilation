@@ -19,7 +19,7 @@ CREATE FUNCTION fnc_pessoa3(pcpf character varying, pcampo character varying) RE
 
 https://github.com/aasouzaconsult/Scripts-para-DBA/blob/439200ecb7ba64187a8895f99ad10c20faa7d8eb/99.%20Postgres/Curso%20-%20MONDRIAN/aula.sql
 
-https://github.com/Mergoth/eo-old-dnevnik/blob/00c789ea1dd4f6ab80f9a174745f2b04d03647a7/dou-parent/dou-web-server/db/current/functions.sql has dynamic execution with 198 parameters
+https://github.com/Mergoth/eo-old-dnevnik/blob/00c789ea1dd4f6ab80f9a174745f2b04d03647a7/dou-parent/dou-web-server/db/current/functions.sql has dynamic execution with 198 parameters - any inlined query would probably be very large for even simple queries of this kind (note: this is not a PG dump, so someone manually wrote this code).
 
 ------------------------
 STATIC EXECUTION
@@ -31,15 +31,21 @@ RAISES
 ------------------------
 Usually tied to exceptions handling clauses.
 
-Typically something like RAISE NOTICE "message: %", parameter
+Almost always of the form RAISE NOTICE "message: %", parameter
 
 ------------------------
 EXCEPTIONS
 ------------------------
 Exceptions such as duplicate_sql will be interesting to codegen as these just map to Insert calls returning false in tpl. These nice exception cases seem to happen mainly when we wrap around a sql execution.
 
+------------------------
+PERFORM
+------------------------
+instances where we perform pg_notify
+used to invoke void functions. These void functions often just contain some insert or update statement.
+
 -----------------------
 Other notes
 ------------------------
 ALTER table's are not inlinable by Froid right now and will be interesting to look into for compilation.
-
+Lots of pg_dump

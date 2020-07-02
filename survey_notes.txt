@@ -19,6 +19,7 @@ CREATE FUNCTION fnc_pessoa3(pcpf character varying, pcampo character varying) RE
 
 https://github.com/aasouzaconsult/Scripts-para-DBA/blob/439200ecb7ba64187a8895f99ad10c20faa7d8eb/99.%20Postgres/Curso%20-%20MONDRIAN/aula.sql
 
+https://github.com/Mergoth/eo-old-dnevnik/blob/00c789ea1dd4f6ab80f9a174745f2b04d03647a7/dou-parent/dou-web-server/db/current/functions.sql has dynamic execution with 198 parameters
 
 ------------------------
 STATIC EXECUTION
@@ -29,6 +30,8 @@ Plenty of instances where we SELECT from a table on another function. (SELECT <o
 RAISES
 ------------------------
 Usually tied to exceptions handling clauses.
+
+Typically something like RAISE NOTICE "message: %", parameter
 
 ------------------------
 EXCEPTIONS

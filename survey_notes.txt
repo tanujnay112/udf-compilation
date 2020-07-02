@@ -35,8 +35,14 @@ EXCEPTIONS
 ------------------------
 Exceptions such as duplicate_sql will be interesting to codegen as these just map to Insert calls returning false in tpl. These nice exception cases seem to happen mainly when we wrap around a sql execution.
 
+------------------------
+PERFORM
+------------------------
+instances where we perform pg_notify
+
+
 -----------------------
 Other notes
 ------------------------
 ALTER table's are not inlinable by Froid right now and will be interesting to look into for compilation.
-
+Lots of pg_dump

@@ -23,13 +23,20 @@ https://github.com/aasouzaconsult/Scripts-para-DBA/blob/439200ecb7ba64187a8895f9
 ------------------------
 STATIC EXECUTION
 ------------------------
-
+Plenty of instances where we SELECT from a table on another function. (SELECT <other udf>(x) FROM table)
 
 ------------------------
 RAISES
 ------------------------
+Usually tied to exceptions handling clauses.
 
 ------------------------
 EXCEPTIONS
 ------------------------
+Exceptions such as duplicate_sql will be interesting to codegen as these just map to Insert calls returning false in tpl. These nice exception cases seem to happen mainly when we wrap around a sql execution.
+
+-----------------------
+Other notes
+------------------------
+ALTER table's are not inlinable by Froid right now and will be interesting to look into for compilation.
 

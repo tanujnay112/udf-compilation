@@ -39,7 +39,7 @@ Exceptions such as duplicate_sql will be interesting to codegen as these just ma
 PERFORM
 ------------------------
 instances where we perform pg_notify
-
+used to invoke void functions. These void functions often just contain some insert or update statement.
 
 -----------------------
 Other notes

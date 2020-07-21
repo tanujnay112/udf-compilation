@@ -49,3 +49,7 @@ Other notes
 ------------------------
 ALTER table's are not inlinable by Froid right now and will be interesting to look into for compilation.
 Lots of pg_dump
+
+1/3 of the UDF's return Triggers
+
+1391/19408 of these are NOT read-only as determined by searching for 'insert' 'update' or perform commands

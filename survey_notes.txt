@@ -79,7 +79,7 @@ diagnostics        |  1
 perform/inserts    |  264
 raise		   |  782
 exception	   |  19
-immutable	   |  659
+immutable	   |  4
 stable		   |  10
 volatile	   |  256
 dynamic execution  |  157

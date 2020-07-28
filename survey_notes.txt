@@ -53,3 +53,62 @@ Lots of pg_dump
 1/3 of the UDF's return Triggers
 
 1391/19408 of these are NOT read-only as determined by searching for 'insert' 'update' or perform commands
+
+
+
+--------------------------------------------
+Overall Statistics of non-inlinable features
+--------------------------------------------
+Feature            | Count
+----------------------------
+diagnostics        |  267
+perform/inserts    |  1391
+raise		   |  1661
+exception	   |  571
+immutable	   |  659
+stable		   |  134
+volatile	   |  711
+dynamic execution  |  774
+
+-----------------------------------------------------
+Statistics amongst the 6262 trigger functions we have
+-----------------------------------------------------
+Feature            | Count
+----------------------------
+diagnostics        |  1
+perform/inserts    |  264
+raise		   |  782
+exception	   |  19
+immutable	   |  659
+stable		   |  10
+volatile	   |  256
+dynamic execution  |  157
+
+
+Total number of functions with the above features
+
+-------------------------------------------------
+ALL features except stable, volatile or immutable
+-------------------------------------------------
+3808 without triggers 
+8953 with triggers
+
+
+-------------------------------------------------
+ALL features except volatile or immutable
+-------------------------------------------------
+4485 without triggers 
+9389 with triggers
+
+   
+-------------------------------------------------
+ALL features except immutable
+-------------------------------------------------
+4612 without triggers 
+9510 with triggers
+
+-------------------------------------------------
+ALL features
+-------------------------------------------------
+5256 without triggers 
+10153 with triggers

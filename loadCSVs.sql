@@ -1,3 +1,6 @@
+-- Usage: Use the -f flag to specify a psql file to run
+-- For instance, `psql -h localhost -d database -f loadCSVs.sql
+
 DROP TABLE IF EXISTS public.library_link;
 CREATE TABLE public.library_link (
     id integer NOT NULL,

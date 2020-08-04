@@ -1,0 +1,63 @@
+ CREATE OR REPLACE FUNCTION hex_to_int(hexval varchar) RETURNS integer AS $$\r+|      4015 |    23
+ DECLARE\r                                                                    +|           | 
+    result  int;\r                                                            +|           | 
+ BEGIN\r                                                                      +|           | 
+  EXECUTE 'SELECT x''' || hexval || '''::int' INTO result;  RETURN result;\r  +|           | 
+ END;\r                                                                       +|           | 
+ $$ \r                                                                        +|           | 
+ LANGUAGE plpgsql;                                                             |           | 
+
+ create or replace function func2(int) returns int as $$             +|      3822 |     1
+ declare                                                             +|           | 
+         t1 int;                                                     +|           | 
+ begin                                                               +|           | 
+         execute 'select count(*) from qp_misc_jiras.pg_foo' into t1;+|           | 
+         return t1;                                                  +|           | 
+ end;                                                                +|           | 
+ $$                                                                  +|           | 
+ language plpgsql;                                                    |           | 
+
+ CREATE OR REPLACE FUNCTION removeAllTriggers() RETURNS text AS $$\r                                                      +|      4024 |    40
+   DECLARE \r                                                                                                             +|           | 
+     output character varying;\r                                                                                          +|           | 
+     rec RECORD;\r                                                                                                        +|           | 
+ BEGIN   \r                                                                                                               +|           | 
+     output := '';\r                                                                                                      +|           | 
+     FOR rec IN (select * from information_schema.triggers where trigger_name like '%wal_trigger' order by trigger_name)\r+|           | 
+     LOOP\r                                                                                                               +|           | 
+         EXECUTE  'DROP TRIGGER IF EXISTS ' || rec.trigger_name  || ' ON ' ||    rec.event_object_table   ;\r             +|           | 
+     END LOOP;\r                                                                                                          +|           | 
+     RETURN output;   \r                                                                                                  +|           | 
+ END;\r                                                                                                                   +|           | 
+ $$ LANGUAGE plpgsql;                                                                                                      |           | 
+
+ CREATE FUNCTION add_alarmdef(target character varying, device character varying, metric character varying, valspan integer, threshtype character varying, comparisontype character varying, trapdest character varying, warn integer, crit integer, disabled boolean) RETURNS integer+|      5069 |     0
+     LANGUAGE plpgsql                                                                                                                                                                                                                                                                 +|           | 
+     AS $_$                                                                                                                                                                                                                                                                           +|           | 
+                                                                                                                                                                                                                                                                                      +|           | 
+     DECLARE                                                                                                                                                                                                                                                                          +|           | 
+                                                                                                                                                                                                                                                                                      +|           | 
+     BEGIN                                                                                                                                                                                                                                                                            +|           | 
+         -- Any errors or inconsistancies raise exceptions so that in                                                                                                                                                                                                                 +|           | 
+         -- code we just have to look for a true execute() statement                                                                                                                                                                                                                  +|           | 
+         -- without having to actually fetch the result (0, null etc are                                                                                                                                                                                                              +|           | 
+         -- valid returns).                                                                                                                                                                                                                                                           +|           | 
+                                                                                                                                                                                                                                                                                      +|           | 
+         --                                                                                                                                                                                                                                                                           +|           | 
+         -- START adding data                                                                                                                                                                                                                                                         +|           | 
+         --                                                                                                                                                                                                                                                                           +|           | 
+         EXECUTE 'INSERT INTO alarmdefs ( target, device, metric, valspan, threshtype, comparisontype, trapdest, warn, crit, disabled )                                                                                                                                               +|           | 
+           VALUES ( $1, $2, $3, $4, $5, $6, $7 )'                                                                                                                                                                                                                                     +|           | 
+           USING target, device, metric, valspan, threshtype, comparisontype, trapdest, warn, crit, disabled;                                                                                                                                                                         +|           | 
+                                                                                                                                                                                                                                                                                      +|           | 
+         IF NOT FOUND THEN                                                                                                                                                                                                                                                            +|           | 
+             RAISE EXCEPTION 'Failed to create trapdest';                                                                                                                                                                                                                             +|           | 
+         END IF;                                                                                                                                                                                                                                                                      +|           | 
+                                                                                                                                                                                                                                                                                      +|           | 
+         RETURN 1;                                                                                                                                                                                                                                                                    +|           | 
+     END;                                                                                                                                                                                                                                                                             +|           | 
+ $_$;                                                                                                                                                                                                                                                                                  |           | 
+
+---------------
+EXCEPTIONS
+--------------

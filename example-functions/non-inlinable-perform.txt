@@ -1,0 +1,80 @@
+ create or replace function gamebox_site_information(                     +|      4892 |     0
+         main_url TEXT,                                                   +|           | 
+         master_urls TEXT,                                                +|           | 
+         split TEXT                                                       +|           | 
+ ) returns TEXT as $$                                                     +|           | 
+ DECLARE                                                                  +|           | 
+         dblink_urls TEXT[];                                              +|           | 
+                                                                          +|           | 
+ BEGIN                                                                    +|           | 
+         IF ltrim(rtrim(main_url)) = '' THEN                              +|           | 
+                 raise info '-1, 运营商URL为空';                          +|           | 
+                 RETURN '1, 运营商URL为空';                               +|           | 
+         ELSEIF ltrim(rtrim(master_urls)) = '' THEN                       +|           | 
+                 raise info '-1, 站点库URL为空';                          +|           | 
+                 RETURN '2, 站点库URL为空';                               +|           | 
+         ELSEIF ltrim(rtrim(split))='' THEN                               +|           | 
+                 raise info '-1, 分隔符为空';                             +|           | 
+                 RETURN '3, 分隔符为空';                                  +|           | 
+         END IF;                                                          +|           | 
+                                                                          +|           | 
+         dblink_urls:=regexp_split_to_array(master_urls, split);          +|           | 
+                                                                          +|           | 
+         IF array_length(dblink_urls,  1) > 0 THEN                        +|           | 
+                                                                          +|           | 
+                 perform dblink_close_all();                              +|           | 
+                 perform gamebox_collect_site_infor(main_url);            +|           | 
+                                                                          +|           | 
+                 FOR i IN 1..array_length(dblink_urls,  1)                +|           | 
+                 LOOP                                                     +|           | 
+                         perform gamebox_role_information(dblink_urls[i]);+|           | 
+                 END LOOP;                                                +|           | 
+                                                                          +|           | 
+         END IF;                                                          +|           | 
+         RETURN '0';                                                      +|           | 
+ END;                                                                     +|           | 
+                                                                          +|           | 
+ $$ language plpgsql;                                                      |           | 
+
+ CREATE OR REPLACE FUNCTION prunedata() RETURNS void+|      4079 |     1
+     AS $$                                          +|           | 
+ DECLARE                                            +|           | 
+ BEGIN                                              +|           | 
+         PERFORM prunedatabase();                   +|           | 
+                                                    +|           | 
+         PERFORM pruneplugloaddatabase();           +|           | 
+                                                    +|           | 
+         PERFORM pruneemsaudit();                   +|           | 
+                                                    +|           | 
+         PERFORM prune_ems_user_audit();            +|           | 
+                                                    +|           | 
+         PERFORM pruneeventsfault();                +|           | 
+                                                    +|           | 
+ END;                                               +|           | 
+ $$                                                 +|           | 
+ LANGUAGE plpgsql;                                   |           | 
+
+ CREATE OR REPLACE FUNCTION process_t_gps() RETURNS TRIGGER AS $body$                           +|      5116 |     0
+     DECLARE                                                                                    +|           | 
+         rec record;                                                                            +|           | 
+     BEGIN                                                                                      +|           | 
+         IF (TG_OP = 'DELETE') THEN                                                             +|           | 
+             --插入的GPS都是4326的经纬度，我们将在3857的谷歌底图上显示数据，发送转换后的3857出去+|           | 
+             select TG_OP TG_OP,OLD.id,ST_AsText(ST_Transform(OLD.geom,3857)) geom into rec;    +|           | 
+             perform pg_notify('gps',row_to_json(rec)::text);                                   +|           | 
+             RETURN OLD;                                                                        +|           | 
+         ELSIF (TG_OP = 'UPDATE') THEN                                                          +|           | 
+             select TG_OP TG_OP,NEW.id,ST_AsText(ST_Transform(NEW.geom,3857)) geom into rec;    +|           | 
+             perform pg_notify('gps',row_to_json(rec)::text);                                   +|           | 
+             RETURN NEW;                                                                        +|           | 
+         ELSIF (TG_OP = 'INSERT') THEN                                                          +|           | 
+             select TG_OP TG_OP,NEW.id,ST_AsText(ST_Transform(NEW.geom,3857)) geom into rec;    +|           | 
+             perform pg_notify('gps',row_to_json(rec)::text);                                   +|           | 
+             RETURN NEW;                                                                        +|           | 
+         END IF;                                                                                +|           | 
+         RETURN NULL;                                                                           +|           | 
+     END;                                                                                       +|           | 
+ $body$ LANGUAGE plpgsql;                                                                        |           | 
+
+
+

@@ -1,0 +1,10 @@
+ CREATE OR REPLACE FUNCTION lobby2.clanhandle2lower() +|      2764 |     2
+   RETURNS trigger AS                                 +|           | 
+ $BODY$                                               +|           | 
+  BEGIN                                               +|           | 
+          NEW.clanHandleLower = lower(NEW.clanHandle);+|           | 
+    RETURN NEW;                                       +|           | 
+  END;                                                +|           | 
+ $BODY$                                               +|           | 
+   LANGUAGE 'plpgsql' VOLATILE;                        |           | 
+

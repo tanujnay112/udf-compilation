@@ -1,0 +1,25 @@
+ CREATE FUNCTION insert_metadata(p_metadatatype text, p_inherited text) RETURNS integer                               +|      3288 |    80
+     LANGUAGE plpgsql                                                                                                 +|           | 
+     AS $$                                                                                                            +|           | 
+ DECLARE                                                                                                              +|           | 
+         id int;                                                                                                      +|           | 
+ BEGIN                                                                                                                +|           | 
+                 insert into metadata("not_empty") values ('true');                                                   +|           | 
+                 select currval('metadata_metadata_id_seq') into id;                                                  +|           | 
+                 BEGIN                                                                                                +|           | 
+                         update metadata set metadatatype = cast(p_metadatatype as metadatatype) where metadata_id=id;+|           | 
+                 EXCEPTION                                                                                            +|           | 
+                         when others then                                                                             +|           | 
+                                 update metadata set metadatatype_nonstandard = p_metadatatype where metadata_id=id;  +|           | 
+                 END;                                                                                                 +|           | 
+                 BEGIN                                                                                                +|           | 
+                         update metadata set inherited = cast(p_inherited as inherited) where metadata_id=id;         +|           | 
+                 EXCEPTION                                                                                            +|           | 
+                         when others then                                                                             +|           | 
+                                 update metadata set inherited_nonstandard = p_inherited where metadata_id=id;        +|           | 
+                 END;                                                                                                 +|           | 
+                                                                                                                      +|           | 
+                 return id;                                                                                           +|           | 
+ END;                                                                                                                 +|           | 
+ $$;                                                                                                                   |           | 
+

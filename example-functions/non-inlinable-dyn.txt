@@ -58,6 +58,35 @@
      END;                                                                                                                                                                                                                                                                             +|           | 
  $_$;                                                                                                                                                                                                                                                                                  |           | 
 
----------------
-EXCEPTIONS
---------------
+ create or replace function user_group_label() returns void as $$\r                                        +|      4153 |    71
+ begin\r                                                                                                   +|           | 
+     IF NOT EXISTS (SELECT * FROM information_schema.tables WHERE table_name='user_group_label' ) THEN\r   +|           | 
+         execute 'CREATE TABLE public.user_group_label\r                                                   +|           | 
+                     (\r                                                                                   +|           | 
+                       id_group integer NOT NULL DEFAULT nextval(''user_group_label__id_seq''::regclass),\r+|           | 
+                       label_group character varying,\r                                                    +|           | 
+                       CONSTRAINT "user_group-label_pkey" PRIMARY KEY (id_group)\r                         +|           | 
+                     )';\r                                                                                 +|           | 
+     END IF;\r                                                                                             +|           | 
+ end\r                                                                                                     +|           | 
+ $$language plpgsql;                                                                                        |           | 
+
+ create or replace function select_tipo_merma()+|      3460 |     5
+ returns setof record as $$                    +|           | 
+ declare                                       +|           | 
+                                               +|           | 
+         list record;                          +|           | 
+         query varchar(255);                   +|           | 
+                                               +|           | 
+ begin                                         +|           | 
+ query := 'SELECT * FROM tipo_merma';          +|           | 
+                                               +|           | 
+                                               +|           | 
+ FOR list IN EXECUTE query LOOP                +|           | 
+         RETURN NEXT list;                     +|           | 
+ END LOOP;                                     +|           | 
+                                               +|           | 
+ RETURN;                                       +|           | 
+                                               +|           | 
+ END; $$ language plpgsql;                      |           | 
+

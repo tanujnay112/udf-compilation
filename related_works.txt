@@ -1,0 +1,62 @@
+[https://db.in.tum.de/~schuele/data/lambdasql.pdf?lang=de](https://db.in.tum.de/~schuele/data/lambdasql.pdf?lang=de)
+
+Introduces lambda arguments into table functions along with IR generation for that. Lambda expressions are evaluated like how Postreges 11 already LLVMizes its expressions. Also makes LAMBDATABLE and LAMBDACURSOR arguments into table functions that hold results of subqueries.
+
+Freedom for the SQL-Lambda
+Just-in-Time-Compiling User-Injected Functions in PostgreSQL
+
+Aggify: Lifting the Curse of Cursor Loops using Custom Aggregates
+
+[https://dl.acm.org/doi/abs/10.1145/3318464.3389736](https://dl.acm.org/doi/abs/10.1145/3318464.3389736)
+
+Voodoo Indexing for opaque filter queries (query with selection predicate where predicate is a udf). This works by building up clusters of similar data objects without any insight into any query. Then when the query arrives, we can apply the multi armed bandit problem to see which clusters would satisfy the predicate and optimize the query that way. This requires no insight into the query and works well for complex queries that could literally involve things like CNN evaluation. This is really nice because usually such queries also have a LIMIT clause such that we don't have to evaluate the predicate on all objects. Offers 7x speedups on UDF's that take 10ms to evaluate.
+
+[https://dl.acm.org/doi/10.1145/3318464.3389766](https://dl.acm.org/doi/10.1145/3318464.3389766)
+
+COBRA: A Framework for
+Cost-Based Rewriting of Database Applications
+
+Framework for region-based rewriting of DBA's by taking into account the following parameters which are mostly network environment metrics and result set cardinality-related metrics:
+
+ Network round trip time between the client (where the
+program is running) and the database.
+
+Time taken by the database since receiving the query
+to send out the first row in the result.
+Time taken by the database since receiving the query
+to send out the last row in the result.
+Cardinality of the result set for Q, i.e., the number of
+rows in the result after executing Q.
+
+Size in bytes of a single row in the result set for Q.
+BW Network bandwidth (bytes/sec)
+estimated number of invocations
+of Q.
+Cost of a program operator node in the Region DAG
+Cost of executing one imperative program statement
+(other than query execution statement)
+
+This can rewrite loops that may do something stupid like execute the same query inside the loop. DBA languages sometimes make this hard to discern to the application writer especially if there's an ORM in the middle.
+
+processOrders(result) {
+        result = {}; //empty collection
+        for(o : loadAll(Order.class)){
+             cust = o.customer; // requires a separate query
+             val = myFunc(o.o id, cust.c birth year, ...);
+            result.add(val);
+      }
+}
+
+[https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=8509289](https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=8509289)
+
+Compiling away PL/Sql
+
+Froid but more powerful. Takes functions (that could have loops) and transforms it to a functional IR before converting it to inlinable SQL.
+
+[http://cidrdb.org/cidr2020/papers/p1-duta-cidr20.pdf](http://cidrdb.org/cidr2020/papers/p1-duta-cidr20.pdf)
+
+Extending Relational Query Processing with ML Inference
+
+This tries to see the extent to which you can use RDBMS's over dedicated recent frameworks for ML inference. The idea is to build a native (in-DB) ML inference system called Raven that can do cross-optimizations with SQL server. It compiles ML inference requests into Raven IR, whose operators can be implemented using SQL constructs including UDF's. UDF inlining is a key optimization tool here.
+
+[https://arxiv.org/pdf/1911.00231.pdf](https://arxiv.org/pdf/1911.00231.pdf)
